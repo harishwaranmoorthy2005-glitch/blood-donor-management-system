@@ -144,5 +144,4 @@ Coming Soon...
 
 **Harishwaran**
 
-GitHub:
-https://github.com/harishwaranmoorthy2005-glitch
+GitHub: [harishwaranmoorthy2005-glitch](https://github.com/harishwaranmoorthy2005-glitch)
