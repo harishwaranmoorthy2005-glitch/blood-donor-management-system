@@ -31,16 +31,14 @@ const transporter = nodemailer.createTransport({
 const verifyTransporter = async () => {
   try {
     await transporter.verify();
-    console.log("SMTP transporter ready");
+    console.log("✅ SMTP transporter ready");
   } catch (error) {
-    console.error("[emailService] SMTP transporter verification failed:", error.message);
-
-   
-    console.log("Continuing without SMTP verification...");
+    console.error("❌ SMTP Verify Error");
+    console.error(error);
   }
 };
 
-verifyTransporter(); 
+verifyTransporter();
 
 export const sendMail = async ({ to, subject, html, from = defaultFrom }) => {
   try {
@@ -53,7 +51,12 @@ export const sendMail = async ({ to, subject, html, from = defaultFrom }) => {
       html
     });
 
-    console.log('[emailService] Email sent', { messageId: info.messageId, accepted: info.accepted, rejected: info.rejected });
+    console.log('[emailService] Email sent', {
+      messageId: info.messageId,
+      accepted: info.accepted,
+      rejected: info.rejected
+    });
+
     return true;
   } catch (error) {
     console.error('[emailService] sendMail failed', error);
@@ -105,3 +108,11 @@ export const sendLoginSuccessEmail = async ({ to, name, loginTime, browser, devi
     html
   });
 };
+
+console.log({
+  host: smtpHost,
+  port: smtpPort,
+  secure: smtpSecure,
+  user: smtpUser,
+  passExists: !!smtpPass
+});

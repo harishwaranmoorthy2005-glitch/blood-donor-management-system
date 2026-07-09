@@ -21,15 +21,24 @@ if (process.env.TRUST_PROXY !== 'false') {
 }
 
 app.use(helmet());
-const clientUrl = process.env.CLIENT_URL?.replace(/\/$/, '');
-const corsOptions = clientUrl
-  ? {
-      origin: clientUrl,
-      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-      allowedHeaders: ['Content-Type', 'Authorization']
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://blood-donor-management-sys.netlify.app"
+];
+
+app.use(cors({
+  origin(origin, callback) {
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
     }
-  : {};
-app.use(cors(corsOptions));
+
+    return callback(new Error("Not allowed by CORS"));
+  },
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(generalLimiter);
