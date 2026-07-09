@@ -22,8 +22,11 @@ const transporter = nodemailer.createTransport({
   secure: smtpSecure,
   auth: smtpUser ? { user: smtpUser, pass: smtpPass } : undefined,
   requireTLS: true,
+  connectionTimeout: 10000,
+  greetingTimeout: 10000,
+  socketTimeout: 10000,
   tls: {
-    rejectUnauthorized: false,
+    rejectUnauthorized: process.env.NODE_ENV === 'production',
     minVersion: 'TLSv1.2'
   }
 });
@@ -31,9 +34,9 @@ const transporter = nodemailer.createTransport({
 const verifyTransporter = async () => {
   try {
     await transporter.verify();
-    console.log("✅ SMTP transporter ready");
+    console.log('✅ SMTP transporter ready');
   } catch (error) {
-    console.error("❌ SMTP Verify Error");
+    console.error('❌ SMTP Verify Error');
     console.error(error);
   }
 };
@@ -41,27 +44,20 @@ const verifyTransporter = async () => {
 verifyTransporter();
 
 export const sendMail = async ({ to, subject, html, from = defaultFrom }) => {
-  try {
-    console.log('[emailService] Sending email', { to, subject });
-
-    const info = await transporter.sendMail({
-      from,
-      to,
-      subject,
-      html
-    });
-
-    console.log('[emailService] Email sent', {
-      messageId: info.messageId,
-      accepted: info.accepted,
-      rejected: info.rejected
-    });
-
-    return true;
-  } catch (error) {
-    console.error('[emailService] sendMail failed', error);
-    throw error;
+  if (!to || !subject || !html) {
+    throw new Error('Email destination, subject, and HTML body are required');
   }
+
+  const mailOptions = {
+    from,
+    to,
+    subject,
+    html
+  };
+
+  const info = await transporter.sendMail(mailOptions);
+  console.log('[emailService] Message sent:', info.messageId);
+  return info;
 };
 
 export const sendPasswordResetOtp = async ({ to, name, otp, expiryMinutes = 10 }) => {

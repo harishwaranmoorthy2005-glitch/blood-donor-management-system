@@ -10,29 +10,54 @@ export default function ForgotPasswordPage() {
   const [loading, setLoading] = useState(false);
 
   const handleSendOtp = async (e) => {
-    e.preventDefault();
-    const trimmedEmail = email.trim().toLowerCase();
+  e.preventDefault();
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
-      toast.error('Please enter a valid email address');
-      return;
-    }
+  const trimmedEmail = email.trim().toLowerCase();
 
-    setLoading(true);
-    try {
-      const res = await api.post('/api/auth/forgot-password', { email: trimmedEmail });
-      if (res.data.success) {
-        toast.success(res.data.message || 'OTP sent to your email');
-        navigate('/verify-otp', { state: { email: trimmedEmail } });
-      } else {
-        toast.error(res.data.message || 'Unable to send OTP');
-      }
-    } catch (error) {
-      toast.error(error.response?.data?.message || 'Unable to send OTP');
-    } finally {
-      setLoading(false);
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+    toast.error("Please enter a valid email address");
+    return;
+  }
+
+  setLoading(true);
+
+  try {
+    console.log("🚀 Before API call");
+
+    const res = await api.post("/api/auth/forgot-password", {
+      email: trimmedEmail,
+    });
+
+    console.log("✅ After API call");
+    console.log(res);
+
+    if (res.data.success) {
+      toast.success(res.data.message || "OTP sent to your email");
+      navigate("/verify-otp", {
+        state: { email: trimmedEmail },
+      });
+    } else {
+      toast.error(res.data.message || "Unable to send OTP");
     }
-  };
+  } catch (error) {
+    console.log("========== AXIOS ERROR ==========");
+    console.log("FULL ERROR:", error);
+    console.log("CODE:", error.code);
+    console.log("MESSAGE:", error.message);
+    console.log("RESPONSE:", error.response);
+    console.log("REQUEST:", error.request);
+    console.log("=================================");
+
+    toast.error(
+      error.customMessage ||
+      error.response?.data?.message ||
+      error.message ||
+      "Unable to send OTP"
+    );
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_top_left,_rgba(239,68,68,0.3),_transparent_30%),linear-gradient(135deg,_#0f172a_0%,_#111827_100%)] px-4 py-10">

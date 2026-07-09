@@ -31,10 +31,12 @@ const sanitizeUser = (user) => {
 };
 const safelySendEmail = async (sendFn, payload, label) => {
   try {
+    console.log("📧 Calling sendMail...");
     await sendFn(payload);
+    console.log("✅ Mail sent successfully");
     return true;
   } catch (error) {
-    console.warn(`${label} failed:`, error.message);
+    console.error("❌ Mail Error:", error);
     return false;
   }
 };
@@ -136,6 +138,14 @@ export const googleAuthCallback = (req, res, next) => {
     const frontendRedirect = `${getClientUrl()}/auth/google/callback?token=${encodeURIComponent(token)}&isNewUser=${isNewUser}`;
 
     void (async () => {
+      if (isNewUser) {
+        await safelySendEmail(
+          sendWelcomeEmail,
+          { to: user.email, name: user.name, email: user.email },
+          'Welcome email for new Google user'
+        );
+      }
+
       await safelySendEmail(
         sendLoginSuccessEmail,
         {
@@ -173,6 +183,9 @@ export const forgotPassword = async (req, res) => {
     user.otpResendCount = 0;
     user.otpResendAt = null;
     await user.save();
+
+    console.log("OTP generated:", otp);
+    console.log("Sending OTP to:", user.email);
 
     const mailSent = await safelySendEmail(
       sendPasswordResetOtp,
@@ -269,13 +282,20 @@ export const resetPassword = async (req, res) => {
     user.resetOTPExpiry = null;
     await user.save();
 
-    await safelySendEmail(
-      sendPasswordResetSuccess,
-      { to: user.email, name: user.name, changedAt: new Date().toLocaleString() },
-      'Password reset success email'
-    );
+    void (async () => {
+      await safelySendEmail(
+        sendPasswordResetSuccess,
+        { to: user.email, name: user.name, changedAt: new Date().toLocaleString() },
+        'Password reset success email'
+      );
 
-    await addNotificationJob({ userId: user._id, title: 'Password changed', message: 'Your password was reset successfully', email: user.email, type: 'info' });
+      try {
+        await addNotificationJob({ userId: user._id, title: 'Password changed', message: 'Your password was reset successfully', email: user.email, type: 'info' });
+      } catch (queueError) {
+        console.error('[auth-debug] password reset notification queue job failed', { userId: user._id.toString(), error: queueError.message });
+      }
+    })();
+
     return sendResponse(res, 200, true, 'Password reset successfully');
   } catch (error) {
     return sendResponse(res, 500, false, error.message);

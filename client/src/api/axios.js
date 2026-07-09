@@ -3,7 +3,7 @@ import axios from 'axios';
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL?.replace(/\/$/, '') || '';
 const api = axios.create({
   baseURL: BACKEND_URL || '/',
-  timeout: 10000,
+  timeout: 30000,
   headers: { 'Content-Type': 'application/json' }
 });
 
