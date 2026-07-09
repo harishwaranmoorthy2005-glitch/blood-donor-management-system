@@ -1,193 +1,82 @@
-import nodemailer from 'nodemailer';
+// mailService.js
+import axios from "axios";
+
 import {
   generateOTPTemplate,
   generatePasswordChangedTemplate,
   generateWelcomeTemplate,
   generateLoginSuccessTemplate,
-  generateEmailVerificationTemplate
-} from '../utils/emailTemplates/index.js';
-const smtpPort = Number(process.env.SMTP_PORT || 465);
-const smtpSecure = process.env.SMTP_SECURE === "true";
+  generateEmailVerificationTemplate,
+} from "../utils/emailTemplates/index.js";
 
-const smtpHost = process.env.SMTP_HOST || 'smtp-relay.brevo.com';
-/* const smtpPort = Number(process.env.SMTP_PORT || 587);
-const smtpSecure = process.env.SMTP_SECURE === 'true'; */
-const smtpUser = process.env.SMTP_USER || '';
-const smtpPass = process.env.SMTP_PASS || '';
-const defaultFrom =
-  process.env.SMTP_FROM ||
-  'Blood Donor Management System <blood.donor2026@gmail.com>';
+const API_URL = "https://api.brevo.com/v3/smtp/email";
 
-console.log('========== SMTP CONFIG ==========');
-console.log({
-  host: smtpHost,
-  port: smtpPort,
-  secure: smtpSecure,
-  user: smtpUser,
-  passExists: !!smtpPass
-});
-console.log('=================================');
+const apiKey = process.env.BREVO_API_KEY;
 
-const transporter = nodemailer.createTransport({
-  host: smtpHost,
-  port: Number(process.env.SMTP_PORT),
-  secure: false,
+const sender = {
+  name: process.env.BREVO_SENDER_NAME || "Blood Donor Management System",
+  email: process.env.BREVO_SENDER_EMAIL || "blood.donor2026@gmail.com",
+};
 
-  auth: {
-    user: smtpUser,
-    pass: smtpPass,
-  },
-
-  tls: {
-    rejectUnauthorized: false,
-  },
-
-  family: 4,
-
-  connectionTimeout: 30000,
-  greetingTimeout: 30000,
-  socketTimeout: 30000,
-});
-
-(async () => {
+export const sendMail = async ({ to, subject, html }) => {
   try {
-    await transporter.verify();
-    console.log('✅ SMTP transporter ready');
-  } catch (error) {
-    console.error('❌ SMTP Verify Error');
-    console.error(error);
-  }
-})();
+    const res = await axios.post(
+      API_URL,
+      {
+        sender,
+        to: [{ email: to }],
+        subject,
+        htmlContent: html,
+      },
+      {
+        headers: {
+          "api-key": apiKey,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      }
+    );
 
-export const sendMail = async ({
-  to,
-  subject,
-  html,
-  from = defaultFrom
-}) => {
-  try {
-    console.log('=================================');
-    console.log('📧 Sending Email');
-    console.log({
-      from,
-      to,
-      subject
-    });
-
-    const info = await transporter.sendMail({
-      from,
-      to,
-      subject,
-      html
-    });
-
-    console.log('✅ Email Sent Successfully');
-    console.log(info);
-    console.log('=================================');
-
-    return info;
-  } catch (error) {
-    console.log('=================================');
-    console.error('❌ SEND MAIL ERROR');
-    console.error('Message:', error.message);
-    console.error('Code:', error.code);
-    console.error('Command:', error.command);
-    console.error('Response:', error.response);
-    console.error('ResponseCode:', error.responseCode);
-    console.error(error);
-    console.log('=================================');
-
-    throw error;
+    console.log("✅ Email sent:", res.data);
+    return res.data;
+  } catch (err) {
+    console.error("❌ Brevo API Error");
+    console.error(err.response?.data || err.message);
+    throw err;
   }
 };
 
-export const sendPasswordResetOtp = async ({
-  to,
-  name,
-  otp,
-  expiryMinutes = 10
-}) => {
-  const html = generateOTPTemplate({
-    name,
-    otp,
-    expiryMinutes
-  });
-
-  return sendMail({
+export const sendPasswordResetOtp = ({to,name,otp,expiryMinutes=10}) =>
+  sendMail({
     to,
-    subject: 'Password Reset OTP',
-    html
-  });
-};
-
-export const sendPasswordResetSuccess = async ({
-  to,
-  name,
-  changedAt
-}) => {
-  const html = generatePasswordChangedTemplate({
-    name,
-    changedAt
+    subject:"Password Reset OTP",
+    html:generateOTPTemplate({name,otp,expiryMinutes})
   });
 
-  return sendMail({
+export const sendPasswordResetSuccess = ({to,name,changedAt}) =>
+  sendMail({
     to,
-    subject: 'Password Changed Successfully',
-    html
-  });
-};
-
-export const sendWelcomeEmail = async ({
-  to,
-  name,
-  email
-}) => {
-  const html = generateWelcomeTemplate({
-    name,
-    email
+    subject:"Password Changed Successfully",
+    html:generatePasswordChangedTemplate({name,changedAt})
   });
 
-  return sendMail({
+export const sendWelcomeEmail = ({to,name,email}) =>
+  sendMail({
     to,
-    subject: 'Welcome to Blood Donor Management System',
-    html
-  });
-};
-
-export const sendVerificationEmail = async ({
-  to,
-  name,
-  verificationUrl
-}) => {
-  const html = generateEmailVerificationTemplate({
-    name,
-    verificationUrl
+    subject:"Welcome to Blood Donor Management System",
+    html:generateWelcomeTemplate({name,email})
   });
 
-  return sendMail({
+export const sendVerificationEmail = ({to,name,verificationUrl}) =>
+  sendMail({
     to,
-    subject: 'Verify Your Email',
-    html
-  });
-};
-
-export const sendLoginSuccessEmail = async ({
-  to,
-  name,
-  loginTime,
-  browser,
-  device
-}) => {
-  const html = generateLoginSuccessTemplate({
-    name,
-    loginTime,
-    browser,
-    device
+    subject:"Verify Your Email",
+    html:generateEmailVerificationTemplate({name,verificationUrl})
   });
 
-  return sendMail({
+export const sendLoginSuccessEmail = ({to,name,loginTime,browser,device}) =>
+  sendMail({
     to,
-    subject: 'Login Successful',
-    html
+    subject:"Login Successful",
+    html:generateLoginSuccessTemplate({name,loginTime,browser,device})
   });
-};
