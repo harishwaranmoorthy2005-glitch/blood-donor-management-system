@@ -187,6 +187,7 @@ export default function ProfilePage() {
             />
 
             <input
+            placeholder="Date of Birth"
               type="date"
               className="w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-3"
               value={form.dateOfBirth}
@@ -196,6 +197,7 @@ export default function ProfilePage() {
                   dateOfBirth: e.target.value,
                 })
               }
+              
             />
 
             <label className="flex items-center gap-3 text-sm text-slate-300">
