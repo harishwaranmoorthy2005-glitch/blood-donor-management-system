@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Users, HeartHandshake, ClipboardList, AlertTriangle, ShieldCheck } from 'lucide-react';
+import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import adminApi from '../../api/adminAxios.js';
 
 const statCards = [
@@ -27,13 +28,12 @@ export default function AdminDashboardPage() {
     };
 
     loadDashboard();
-  }, []);
+    const intervalId = window.setInterval(() => {
+      loadDashboard();
+    }, 15000);
 
-  const chartBars = useMemo(() => {
-    if (!dashboard?.registrationSeries?.length) return [];
-    const max = Math.max(...dashboard.registrationSeries.map((item) => item.count));
-    return dashboard.registrationSeries.map((item) => ({ ...item, height: max ? Math.max(12, (item.count / max) * 100) : 12 }));
-  }, [dashboard]);
+    return () => window.clearInterval(intervalId);
+  }, []);
 
   if (loading) {
     return <div className="rounded-3xl border border-slate-800 bg-slate-900/80 p-8 text-slate-300">Loading admin dashboard...</div>;
@@ -44,7 +44,7 @@ export default function AdminDashboardPage() {
       <div className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6 shadow-2xl">
         <p className="text-sm text-red-300">Administrative control center</p>
         <h1 className="text-2xl font-semibold">Admin dashboard</h1>
-        <p className="mt-2 text-sm text-slate-400">Live MongoDB data from the blood donor system.</p>
+       
       </div>
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {statCards.map((item, index) => {
@@ -66,18 +66,45 @@ export default function AdminDashboardPage() {
             <h2 className="text-lg font-semibold">Registration trend</h2>
             <span className="text-sm text-slate-400">Last 12 months</span>
           </div>
-          <div className="flex h-48 items-end gap-3">
-            {chartBars.length > 0 ? chartBars.map((item) => (
-              <div key={`${item.month}-${item.count}`} className="flex flex-1 flex-col items-center gap-2">
-                <div className="flex h-36 w-full items-end rounded-xl bg-slate-800 p-1">
-                  <div className="w-full rounded-lg bg-gradient-to-t from-red-600 to-orange-400" style={{ height: `${item.height}%` }} />
-                </div>
-                <div className="text-center text-xs text-slate-400">
-                  <p>{item.month}</p>
-                  <p>{item.count}</p>
-                </div>
+          <div className="h-72">
+            {dashboard?.registrationSeries?.length ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={dashboard.registrationSeries} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+                  <CartesianGrid stroke="#334155" strokeDasharray="3 3" vertical={false} />
+                  <XAxis
+                    dataKey="month"
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fill: '#94a3b8', fontSize: 12 }}
+                    label={{ value: 'Month', position: 'insideBottom', offset: -6, fill: '#94a3b8', fontSize: 12 }}
+                  />
+                  <YAxis
+                    allowDecimals={false}
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fill: '#94a3b8', fontSize: 12 }}
+                    label={{ value: 'Number of registered users', angle: -90, position: 'insideLeft', fill: '#94a3b8', fontSize: 12 }}
+                  />
+                  <Tooltip
+                    cursor={{ stroke: 'rgba(248, 113, 113, 0.35)', strokeWidth: 1 }}
+                    contentStyle={{ backgroundColor: 'rgba(15, 23, 42, 0.96)', border: '1px solid rgba(248, 113, 113, 0.35)', color: '#f8fafc' }}
+                    labelStyle={{ color: '#f8fafc' }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="count"
+                    stroke="#ef4444"
+                    strokeWidth={3}
+                    dot={{ r: 4, strokeWidth: 2, fill: '#020617', stroke: '#ef4444' }}
+                    activeDot={{ r: 6, strokeWidth: 2, fill: '#f97316' }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="flex h-full items-center justify-center rounded-2xl border border-dashed border-slate-700 bg-slate-800/40">
+                <p className="text-sm text-slate-400">No registration data available.</p>
               </div>
-            )) : <p className="text-sm text-slate-400">No registration data yet.</p>}
+            )}
           </div>
         </div>
         <div className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6">

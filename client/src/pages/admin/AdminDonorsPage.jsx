@@ -32,7 +32,7 @@ export default function AdminDonorsPage() {
     <div className="space-y-6">
       <div className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6 shadow-2xl">
         <h1 className="text-2xl font-semibold">Donors</h1>
-        <p className="mt-2 text-sm text-slate-400">View active donor records from MongoDB.</p>
+       
       </div>
       <div className="rounded-3xl border border-slate-800 bg-slate-900/80 p-4">
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">

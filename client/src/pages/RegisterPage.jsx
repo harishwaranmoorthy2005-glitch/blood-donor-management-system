@@ -15,7 +15,7 @@ export default function RegisterPage() {
   const { register } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from?.pathname || '/';
+  const from = location.state?.from?.pathname || '/dashboard';
   const submitRef = useRef(false);
 
   useEffect(() => {

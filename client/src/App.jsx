@@ -3,6 +3,7 @@ import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import LandingPage from './pages/LandingPage';
 import DashboardPage from './pages/DashboardPage';
 import DonorsPage from './pages/DonorsPage';
 import EmergencyPage from './pages/EmergencyPage';
@@ -33,13 +34,14 @@ const ProtectedRoute = ({ children }) => {
 
 const AppRoutes = () => (
   <Routes>
+    <Route path="/" element={<LandingPage />} />
     <Route path="/login" element={<LoginPage />} />
     <Route path="/register" element={<RegisterPage />} />
     <Route path="/forgot-password" element={<ForgotPasswordPage />} />
     <Route path="/verify-otp" element={<VerifyOtpPage />} />
     <Route path="/reset-password" element={<ResetPasswordPage />} />
     <Route path="/auth/google/callback" element={<GoogleCallbackPage />} />
-    <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
+    <Route path="/dashboard" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
       <Route index element={<DashboardPage />} />
       <Route path="donors" element={<DonorsPage />} />
       <Route path="emergency" element={<EmergencyPage />} />

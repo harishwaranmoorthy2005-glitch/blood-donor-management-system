@@ -49,7 +49,7 @@ export default function AdminProfilePage() {
     <div className="space-y-6">
       <div className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6 shadow-2xl">
         <h1 className="text-2xl font-semibold">Admin Profile</h1>
-        <p className="mt-2 text-sm text-slate-400">Manage the administrative identity for this workspace.</p>
+       
       </div>
       <div className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6">
         <div className="space-y-4">

@@ -28,7 +28,7 @@ export default function AdminEmergencyPage() {
     <div className="space-y-6">
       <div className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6 shadow-2xl">
         <h1 className="text-2xl font-semibold">Emergency Requests</h1>
-        <p className="mt-2 text-sm text-slate-400">Monitor emergency requests from the field.</p>
+       
       </div>
       <div className="grid gap-4">
         {requests.length > 0 ? requests.map((request) => (
