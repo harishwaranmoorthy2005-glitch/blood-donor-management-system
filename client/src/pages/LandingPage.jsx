@@ -214,6 +214,13 @@ const LandingPage = () => {
             <p className="mt-2">blood.donor2026@gmail.com</p>
           </div>
         </div>
+        <div className="border-t border-white/10 px-4 py-5 text-center text-sm sm:px-6 lg:px-8">
+          <p className="text-slate-500">© 2026 College Blood Donor Portal</p>
+          <p className="mt-1 text-slate-500">
+            Designed &amp; Developed by
+            <span className="ml-1 text-[#FF7A1A]">M. Harishwaran</span>
+          </p>
+        </div>
       </footer>
     </div>
   );
