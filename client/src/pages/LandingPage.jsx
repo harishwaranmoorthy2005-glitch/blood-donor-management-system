@@ -142,22 +142,6 @@ const LandingPage = () => {
         </section>
 
         <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <div className="grid gap-4 rounded-[2rem] border border-white/10 bg-gradient-to-br from-slate-900 to-slate-800 p-4 sm:p-6 md:grid-cols-2 xl:grid-cols-4">
-            {[
-              { label: 'Total Users', value: loadingStats ? '—' : stats.totalUsers },
-              { label: 'Total Donors', value: loadingStats ? '—' : stats.totalDonors },
-              { label: 'Blood Requests', value: loadingStats ? '—' : stats.bloodRequests },
-              { label: 'Emergency Requests', value: loadingStats ? '—' : stats.emergencyRequests }
-            ].map((stat) => (
-              <div key={stat.label} className="rounded-2xl border border-white/10 bg-slate-900/70 p-5 text-center shadow-lg shadow-black/20">
-                <p className="text-sm text-slate-400">{stat.label}</p>
-                <p className="mt-2 text-3xl font-semibold text-white">{stat.value}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
           <div className="mb-10 text-center">
             <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#FF7A1A]">How It Works</p>
             <h2 className="mt-3 text-3xl font-semibold text-white sm:text-4xl">A simple path to saving lives</h2>
