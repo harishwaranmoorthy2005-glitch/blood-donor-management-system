@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import api from '../api/axios';
@@ -7,6 +7,7 @@ import { useAuth } from '../context/AuthContext';
 export default function ProfilePage() {
   const { user, updateUser } = useAuth();
   const [loading, setLoading] = useState(false);
+  const dateInputRef = useRef(null);
   const [form, setForm] = useState({
     name: user?.name || '',
     email: user?.email || '',
@@ -32,6 +33,13 @@ export default function ProfilePage() {
       dateOfBirth: user?.dateOfBirth ? new Date(user.dateOfBirth).toISOString().split('T')[0] : '',
     });
   }, [user]);
+
+  const formatDateForDisplay = (value) => {
+    if (!value) return '';
+    const [year, month, day] = value.split('-');
+    if (!year || !month || !day) return value;
+    return `${day}/${month}/${year}`;
+  };
 
   const handleSave = async () => {
     try {
@@ -186,19 +194,39 @@ export default function ProfilePage() {
               }
             />
 
-            <input
-            placeholder="Date of Birth"
-              type="date"
-              className="w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-3"
-              value={form.dateOfBirth}
-              onChange={(e) =>
-                setForm({
-                  ...form,
-                  dateOfBirth: e.target.value,
-                })
-              }
-              
-            />
+            <div className="relative">
+              <input
+                type="text"
+                readOnly
+                placeholder="Date of Birth"
+                className="w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-3"
+                value={form.dateOfBirth ? formatDateForDisplay(form.dateOfBirth) : ''}
+                onClick={() => {
+                  dateInputRef.current?.showPicker?.();
+                  if (!dateInputRef.current?.showPicker) {
+                    dateInputRef.current?.click();
+                  }
+                }}
+                onFocus={() => {
+                  dateInputRef.current?.showPicker?.();
+                  if (!dateInputRef.current?.showPicker) {
+                    dateInputRef.current?.click();
+                  }
+                }}
+              />
+              <input
+                ref={dateInputRef}
+                type="date"
+                className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+                value={form.dateOfBirth}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    dateOfBirth: e.target.value,
+                  })
+                }
+              />
+            </div>
 
             <label className="flex items-center gap-3 text-sm text-slate-300">
 
