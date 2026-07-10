@@ -32,6 +32,16 @@ export default function AdminUsersPage() {
 
   const pageCount = Math.max(1, Math.ceil(total / limit));
 
+  useEffect(() => {
+    if (page > pageCount) {
+      setPage(pageCount);
+    }
+  }, [page, pageCount]);
+
+  const handlePageChange = (nextPage) => {
+    setPage(Math.min(Math.max(1, nextPage), pageCount));
+  };
+
   return (
     <div className="space-y-6">
       <div className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6 shadow-2xl">
@@ -49,30 +59,30 @@ export default function AdminUsersPage() {
           </select>
         </div>
       </div>
-      <div className="overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/80">
-        <table className="min-w-full divide-y divide-slate-800 text-sm">
+      <div className="overflow-x-auto rounded-3xl border border-slate-800 bg-slate-900/80">
+        <table className="min-w-[760px] w-full divide-y divide-slate-800 text-sm">
           <thead className="bg-slate-800/80 text-slate-300">
             <tr>
-              <th className="px-4 py-3 text-left">Name</th>
-              <th className="px-4 py-3 text-left">Email</th>
-              <th className="px-4 py-3 text-left">Phone</th>
-              <th className="px-4 py-3 text-left">Blood Group</th>
-              <th className="px-4 py-3 text-left">Status</th>
-              <th className="px-4 py-3 text-left">Registered</th>
-              <th className="px-4 py-3 text-left">Action</th>
+              <th className="whitespace-nowrap px-4 py-3 text-left">Name</th>
+              <th className="whitespace-nowrap px-4 py-3 text-left">Email</th>
+              <th className="whitespace-nowrap px-4 py-3 text-left">Phone</th>
+              <th className="whitespace-nowrap px-4 py-3 text-left">Blood Group</th>
+              <th className="whitespace-nowrap px-4 py-3 text-left">Status</th>
+              <th className="whitespace-nowrap px-4 py-3 text-left">Registered</th>
+              <th className="whitespace-nowrap px-4 py-3 text-left">Action</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-800">
             {filteredUsers.length > 0 ? filteredUsers.map((user) => (
               <>
                 <tr key={user._id} className="bg-slate-900/60">
-                  <td className="px-4 py-3 font-medium">{user.name}</td>
-                  <td className="px-4 py-3">{user.email}</td>
-                  <td className="px-4 py-3">{user.phone || '—'}</td>
-                  <td className="px-4 py-3">{user.bloodGroup || '—'}</td>
-                  <td className="px-4 py-3"><span className={`rounded-full px-2.5 py-1 text-xs ${user.isBlocked ? 'bg-amber-500/20 text-amber-300' : 'bg-emerald-500/20 text-emerald-300'}`}>{user.isBlocked ? 'Blocked' : 'Active'}</span></td>
-                  <td className="px-4 py-3">{new Date(user.createdAt).toLocaleDateString()}</td>
-                  <td className="px-4 py-3"><button onClick={() => setExpandedId(expandedId === user._id ? '' : user._id)} className="text-sm text-red-300 hover:text-red-200">View Details</button></td>
+                  <td className="whitespace-nowrap px-4 py-3 font-medium">{user.name}</td>
+                  <td className="whitespace-nowrap px-4 py-3">{user.email}</td>
+                  <td className="whitespace-nowrap px-4 py-3">{user.phone || '—'}</td>
+                  <td className="whitespace-nowrap px-4 py-3">{user.bloodGroup || '—'}</td>
+                  <td className="whitespace-nowrap px-4 py-3"><span className={`rounded-full px-2.5 py-1 text-xs ${user.isBlocked ? 'bg-amber-500/20 text-amber-300' : 'bg-emerald-500/20 text-emerald-300'}`}>{user.isBlocked ? 'Blocked' : 'Active'}</span></td>
+                  <td className="whitespace-nowrap px-4 py-3">{new Date(user.createdAt).toLocaleDateString()}</td>
+                  <td className="whitespace-nowrap px-4 py-3"><button onClick={() => setExpandedId(expandedId === user._id ? '' : user._id)} className="text-sm text-red-300 hover:text-red-200">View Details</button></td>
                 </tr>
                 {expandedId === user._id ? (
                   <tr className="bg-slate-800/50">
@@ -93,8 +103,8 @@ export default function AdminUsersPage() {
       <div className="flex items-center justify-between rounded-3xl border border-slate-800 bg-slate-900/80 p-4">
         <p className="text-sm text-slate-400">Page {page} of {pageCount}</p>
         <div className="flex gap-2">
-          <button onClick={() => setPage((prev) => Math.max(1, prev - 1))} disabled={page === 1} className="rounded-xl border border-slate-700 px-3 py-2 text-sm disabled:opacity-50">Previous</button>
-          <button onClick={() => setPage((prev) => Math.min(pageCount, prev + 1))} disabled={page === pageCount} className="rounded-xl border border-slate-700 px-3 py-2 text-sm disabled:opacity-50">Next</button>
+          <button onClick={() => handlePageChange(page - 1)} disabled={page === 1} className="rounded-xl border border-slate-700 px-3 py-2 text-sm disabled:opacity-50">Previous</button>
+          <button onClick={() => handlePageChange(page + 1)} disabled={page === pageCount} className="rounded-xl border border-slate-700 px-3 py-2 text-sm disabled:opacity-50">Next</button>
         </div>
       </div>
     </div>
