@@ -3,11 +3,11 @@ import { LayoutDashboard, Search, AlertTriangle, Bell, UserCircle, LogOut, Shiel
 import { useAuth } from '../context/AuthContext';
 
 const navItems = [
-  { to: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { to: '/donors', label: 'Search Donors', icon: Search },
-  { to: '/emergency', label: 'Emergency', icon: AlertTriangle },
-  { to: '/notifications', label: 'Notifications', icon: Bell },
-  { to: '/profile', label: 'Profile', icon: UserCircle }
+  { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { to: '/dashboard/donors', label: 'Search Donors', icon: Search },
+  { to: '/dashboard/emergency', label: 'Emergency', icon: AlertTriangle },
+  { to: '/dashboard/notifications', label: 'Notifications', icon: Bell },
+  { to: '/dashboard/profile', label: 'Profile', icon: UserCircle }
 ];
 
 export default function Layout() {
@@ -23,13 +23,22 @@ export default function Layout() {
           </div>
           <nav className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
             {navItems.map(({ to, label, icon: Icon }) => (
-              <NavLink key={to} to={to} className={({ isActive }) => `flex items-center gap-3 rounded-xl px-4 py-3 transition ${isActive ? 'bg-red-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white'}`}>
+              <NavLink
+                key={to}
+                to={to}
+                end
+                className={({ isActive }) => `flex items-center gap-3 rounded-xl px-4 py-3 transition ${isActive ? 'bg-red-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white'}`}
+              >
                 <Icon size={18} />
                 {label}
               </NavLink>
             ))}
             {user?.role === 'admin' && (
-              <NavLink to="/admin" className={({ isActive }) => `flex items-center gap-3 rounded-xl px-4 py-3 transition ${isActive ? 'bg-red-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white'}`}>
+              <NavLink
+                to="/admin"
+                end
+                className={({ isActive }) => `flex items-center gap-3 rounded-xl px-4 py-3 transition ${isActive ? 'bg-red-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white'}`}
+              >
                 <Shield size={18} />
                 Admin
               </NavLink>
