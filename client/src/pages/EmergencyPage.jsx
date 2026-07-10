@@ -141,7 +141,7 @@ export default function EmergencyPage() {
       <div className="rounded-3xl border border-red-500/20 bg-slate-900/80 p-6 shadow-2xl">
         <h1 className="text-2xl font-semibold">Emergency blood requests</h1>
         <p className="mt-2 text-sm text-slate-400">Create urgent requests and notify available donors instantly.</p>
-        <form onSubmit={handleSubmit} className="mt-6 grid gap-4 md:grid-cols-2">
+        <form onSubmit={handleSubmit} className="mt-6 grid gap-4 sm:grid-cols-2">
           <input className="rounded-xl border border-slate-700 bg-slate-800 px-4 py-3" placeholder="Hospital" value={form.hospital} onChange={(e) => setForm({ ...form, hospital: e.target.value })} />
           <input className="rounded-xl border border-slate-700 bg-slate-800 px-4 py-3" placeholder="Patient" value={form.patient} onChange={(e) => setForm({ ...form, patient: e.target.value })} />
           <input className="rounded-xl border border-slate-700 bg-slate-800 px-4 py-3" type="tel" inputMode="numeric" pattern="[0-9]{10}" placeholder="Enter patient contact number" value={form.phoneNumber} onChange={(e) => setForm({ ...form, phoneNumber: e.target.value.replace(/\D/g, '') })} />
@@ -153,7 +153,7 @@ export default function EmergencyPage() {
           <select className="rounded-xl border border-slate-700 bg-slate-800 px-4 py-3" value={form.urgency} onChange={(e) => setForm({ ...form, urgency: e.target.value })}>
             <option value="">Select Urgency</option><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option>
           </select>
-          <div className="md:col-span-2"><button className="w-full rounded-xl bg-gradient-to-r from-red-600 to-orange-500 px-4 py-3 font-semibold">Create Request</button></div>
+          <div className="sm:col-span-2"><button className="w-full rounded-xl bg-gradient-to-r from-red-600 to-orange-500 px-4 py-3 font-semibold">Create Request</button></div>
         </form>
       </div>
       <div className="grid gap-4">
@@ -200,7 +200,7 @@ export default function EmergencyPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4">
           <div className="w-full max-w-2xl rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl">
             <h3 className="text-xl font-semibold text-white">Update Emergency Request</h3>
-            <form onSubmit={handleUpdateSubmit} className="mt-6 grid gap-4 md:grid-cols-2">
+            <form onSubmit={handleUpdateSubmit} className="mt-6 grid gap-4 sm:grid-cols-2">
               <input className="rounded-xl border border-slate-700 bg-slate-800 px-4 py-3" placeholder="Hospital" value={editingForm.hospital} onChange={(e) => setEditingForm({ ...editingForm, hospital: e.target.value })} />
               <input className="rounded-xl border border-slate-700 bg-slate-800 px-4 py-3" placeholder="Patient" value={editingForm.patient} onChange={(e) => setEditingForm({ ...editingForm, patient: e.target.value })} />
               <input className="rounded-xl border border-slate-700 bg-slate-800 px-4 py-3" type="tel" inputMode="numeric" pattern="[0-9]{10}" placeholder="Enter patient contact number" value={editingForm.phoneNumber} onChange={(e) => setEditingForm({ ...editingForm, phoneNumber: e.target.value.replace(/\D/g, '') })} />
@@ -212,7 +212,7 @@ export default function EmergencyPage() {
               <select className="rounded-xl border border-slate-700 bg-slate-800 px-4 py-3" value={editingForm.urgency} onChange={(e) => setEditingForm({ ...editingForm, urgency: e.target.value })}>
                 <option value="">Select Urgency</option><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option>
               </select>
-              <div className="flex justify-end gap-3 md:col-span-2">
+              <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end sm:col-span-2">
                 <button type="button" onClick={() => setEditingRequest(null)} className="rounded-xl border border-slate-700 px-4 py-2 text-sm text-slate-300 transition hover:bg-slate-800">Cancel</button>
                 <button type="submit" disabled={isUpdating} className="rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-2 text-sm font-medium text-red-300 transition hover:bg-red-500/20 disabled:opacity-70">{isUpdating ? 'Saving...' : 'Save Update'}</button>
               </div>

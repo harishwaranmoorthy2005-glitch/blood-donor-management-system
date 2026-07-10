@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
-import { Users, AlertCircle, HeartHandshake } from 'lucide-react';
+import { Users, AlertCircle, HeartHandshake, ClipboardList } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export default function DashboardPage() {
@@ -63,7 +63,7 @@ export default function DashboardPage() {
           {welcomeMessage && <p className="mt-2 text-sm text-slate-300">{welcomeMessage}</p>}
         </div>
       </div>
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {[
           { label: 'Total Donors', value: stats.donors, icon: Users, accent: 'from-red-500 to-orange-400', path: '/donors' },
           { label: 'Requests', value: stats.requests, icon: HeartHandshake, accent: 'from-sky-500 to-indigo-500', path: '/emergency' },
@@ -76,7 +76,7 @@ export default function DashboardPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.08 }}
             onClick={() => navigate(item.path)}
-            className="cursor-pointer rounded-2xl border border-slate-800 bg-slate-900/80 p-5 text-left shadow-xl transition duration-200 hover:-translate-y-1 hover:shadow-2xl"
+            className="cursor-pointer rounded-2xl border border-slate-800 bg-slate-900/80 p-4 text-left shadow-xl transition duration-200 hover:-translate-y-1 hover:shadow-2xl sm:p-5"
           >
             <div className={`mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${item.accent}`}>
               <item.icon className="text-white" size={20} />
@@ -89,16 +89,28 @@ export default function DashboardPage() {
       <div className="grid gap-6">
         <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5">
           <h2 className="mb-4 text-lg font-semibold">Recent emergency requests</h2>
-          <div className="space-y-3">
-            {requests.map((request) => (
-              <div key={request._id} className="flex items-center justify-between rounded-xl border border-slate-800 bg-slate-800/70 p-4">
-                <div>
-                  <p className="font-medium">{request.hospital}</p>
-                  <p className="text-sm text-slate-400">{request.patient} • {request.bloodGroup}</p>
-                </div>
-                <span className="rounded-full bg-red-500/20 px-3 py-1 text-xs font-medium text-red-300">{request.status}</span>
+          <div className="min-h-[240px]">
+            {requests.length > 0 ? (
+              <div className="space-y-3">
+                {requests.map((request) => (
+                  <div key={request._id} className="flex items-center justify-between rounded-xl border border-slate-800 bg-slate-800/70 p-4">
+                    <div>
+                      <p className="font-medium">{request.hospital}</p>
+                      <p className="text-sm text-slate-400">{request.patient} • {request.bloodGroup}</p>
+                    </div>
+                    <span className="rounded-full bg-red-500/20 px-3 py-1 text-xs font-medium text-red-300">{request.status}</span>
+                  </div>
+                ))}
               </div>
-            ))}
+            ) : (
+              <div className="flex min-h-[220px] flex-col items-center justify-center rounded-2xl border border-dashed border-slate-700 bg-slate-800/40 px-6 py-8 text-center">
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-slate-800 text-red-300">
+                  <ClipboardList size={20} />
+                </div>
+                <h3 className="text-lg font-semibold text-white">No Recent Emergency Requests</h3>
+                <p className="mt-2 max-w-md text-sm leading-6 text-slate-400">There are currently no emergency requests. New requests will appear here when they are created.</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

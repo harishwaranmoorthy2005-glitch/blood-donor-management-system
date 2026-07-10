@@ -3,9 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import adminApi, { ADMIN_TOKEN_KEY } from '../api/adminAxios.js';
 import api from '../api/axios.js';
 import toast from 'react-hot-toast';
+import { ShieldCheck } from 'lucide-react';
+import { useAuth } from '../context/AuthContext.jsx';
 
 export default function AdminPage() {
   const navigate = useNavigate();
+  const { setAdminAuthSession } = useAuth();
   const [authorized, setAuthorized] = useState(false);
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(true);
@@ -43,6 +46,7 @@ export default function AdminPage() {
       if (res.data?.success) {
         const token = res.data?.data?.token || '';
         if (token) {
+          setAdminAuthSession(token);
           localStorage.setItem(ADMIN_TOKEN_KEY, token);
           window.sessionStorage.setItem(ADMIN_TOKEN_KEY, token);
         }
@@ -72,22 +76,33 @@ export default function AdminPage() {
 
   if (!authorized) {
     return (
-      <div className="rounded-3xl border border-slate-800 bg-slate-900/80 p-8 shadow-2xl">
-        <h1 className="text-2xl font-semibold">Admin access</h1>
-        <p className="mt-2 text-sm text-slate-400">Enter the admin password to continue to the dashboard.</p>
-        <form onSubmit={handleAuthorize} className="mt-6 max-w-md space-y-4">
-          <input
-            type="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            placeholder="Admin password"
-            className="w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-3 text-sm text-white outline-none ring-0"
-          />
-          {error ? <p className="text-sm text-red-400">{error}</p> : null}
-          <button type="submit" className="rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-500">
-            Continue
-          </button>
-        </form>
+      <div className="flex min-h-screen items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
+        <div className="w-full max-w-md rounded-3xl border border-slate-800 bg-slate-900/90 p-8 shadow-2xl shadow-black/30 sm:p-10">
+          <div className="flex justify-center">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-red-500 to-orange-400 text-white shadow-lg shadow-orange-500/20">
+              <ShieldCheck size={24} />
+            </div>
+          </div>
+          <h1 className="mt-6 text-center text-2xl font-semibold text-white">Admin access</h1>
+          <p className="mt-3 text-center text-sm leading-6 text-slate-400">Enter the admin password to continue to the dashboard.</p>
+          <form onSubmit={handleAuthorize} className="mt-8 space-y-4">
+            <div className="space-y-2">
+              <label htmlFor="admin-password" className="block text-sm font-medium text-slate-300">Admin password</label>
+              <input
+                id="admin-password"
+                type="password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                placeholder="Admin password"
+                className="w-full rounded-xl border border-slate-700 bg-slate-800/80 px-4 py-3 text-sm text-white outline-none ring-0"
+              />
+            </div>
+            {error ? <p className="text-sm text-red-400">{error}</p> : null}
+            <button type="submit" className="w-full rounded-xl bg-gradient-to-r from-red-600 to-orange-500 px-4 py-3 text-sm font-semibold text-white transition hover:brightness-110">
+              Continue
+            </button>
+          </form>
+        </div>
       </div>
     );
   }

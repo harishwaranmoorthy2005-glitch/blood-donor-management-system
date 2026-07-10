@@ -5,11 +5,18 @@ const AuthContext = createContext();
 const TOKEN_KEY = 'token';
 const USER_KEY = 'user';
 const WELCOME_KEY = 'showWelcomeMessage';
+const ADMIN_TOKEN_KEY = 'adminToken';
 let authSessionValidated = false;
+
+const hasStoredAdminToken = () => {
+  if (typeof window === 'undefined') return false;
+  return Boolean(localStorage.getItem(ADMIN_TOKEN_KEY) || sessionStorage.getItem(ADMIN_TOKEN_KEY));
+};
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [adminAuthorized, setAdminAuthorized] = useState(hasStoredAdminToken);
   const validationControllerRef = useRef(null);
 
   const cacheUser = (updatedUser) => {
@@ -57,6 +64,24 @@ export const AuthProvider = ({ children }) => {
     } else {
       localStorage.removeItem(WELCOME_KEY);
     }
+  };
+
+  const setAdminAuthSession = (token) => {
+    if (token) {
+      localStorage.setItem(ADMIN_TOKEN_KEY, token);
+      sessionStorage.setItem(ADMIN_TOKEN_KEY, token);
+      setAdminAuthorized(true);
+    } else {
+      localStorage.removeItem(ADMIN_TOKEN_KEY);
+      sessionStorage.removeItem(ADMIN_TOKEN_KEY);
+      setAdminAuthorized(false);
+    }
+  };
+
+  const clearAdminAuthSession = () => {
+    localStorage.removeItem(ADMIN_TOKEN_KEY);
+    sessionStorage.removeItem(ADMIN_TOKEN_KEY);
+    setAdminAuthorized(false);
   };
 
   useEffect(() => {
@@ -167,16 +192,15 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
     localStorage.removeItem(WELCOME_KEY);
-    localStorage.removeItem('adminToken');
-    sessionStorage.removeItem('adminToken');
+    clearAdminAuthSession();
     setUser(null);
     authSessionValidated = true;
     setLoading(false);
   };
 
   const value = useMemo(
-    () => ({ user, loading, login, register, logout, updateUser: cacheUser, setAuthSession, clearAuthSession }),
-    [user, loading]
+    () => ({ user, loading, adminAuthorized, login, register, logout, updateUser: cacheUser, setAuthSession, clearAuthSession, setAdminAuthSession, clearAdminAuthSession }),
+    [user, loading, adminAuthorized]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

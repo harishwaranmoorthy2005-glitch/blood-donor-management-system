@@ -8,11 +8,14 @@ import { getJwtSecret } from '../utils/adminAuth.js';
 const getClientUrl = () => process.env.CLIENT_URL || 'http://localhost:5173';
 const getBackendUrl = () => (process.env.BACKEND_URL || 'http://localhost:5000').replace(/\/$/, '');
 const defaultCallbackUrl = `${getBackendUrl()}/api/auth/google/callback`;
+const callbackUrl = process.env.NODE_ENV === 'development'
+  ? defaultCallbackUrl
+  : (process.env.GOOGLE_CALLBACK_URL || defaultCallbackUrl);
 
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: process.env.GOOGLE_CALLBACK_URL || defaultCallbackUrl,
+  callbackURL: callbackUrl,
   passReqToCallback: false
 }, async (_accessToken, _refreshToken, profile, done) => {
   try {

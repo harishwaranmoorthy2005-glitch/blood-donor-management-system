@@ -24,14 +24,17 @@ import AdminProfilePage from './pages/admin/AdminProfilePage';
 import AdminNotificationsPage from './pages/admin/AdminNotificationsPage';
 import AdminPasswordPage from './pages/AdminPage';
 
-const ProtectedRoute = ({ children }) => {
-  const { user, loading } = useAuth();
+const ProtectedRoute = ({ children, requireAdmin = false, requireAdminAuth = false }) => {
+  const { user, loading, adminAuthorized } = useAuth();
   const location = useLocation();
 
-  console.debug('[auth-debug] protected route check', { loading, hasUser: Boolean(user), pathname: location.pathname });
+  console.debug('[auth-debug] protected route check', { loading, hasUser: Boolean(user), pathname: location.pathname, requireAdmin, requireAdminAuth, adminAuthorized });
 
   if (loading) return <div className="min-h-screen flex items-center justify-center text-white">Loading...</div>;
-  return user ? children : <Navigate to="/login" replace state={{ from: location }} />;
+  if (!user) return <Navigate to="/login" replace state={{ from: location }} />;
+  if (requireAdmin && user.role !== 'admin') return <Navigate to="/dashboard" replace state={{ from: location }} />;
+  if (requireAdminAuth && !adminAuthorized) return <Navigate to="/admin/login" replace state={{ from: location }} />;
+  return children;
 };
 
 const AppRoutes = () => (
@@ -50,8 +53,9 @@ const AppRoutes = () => (
       <Route path="notifications" element={<NotificationsPage />} />
       <Route path="profile" element={<ProfilePage />} />
     </Route>
-    <Route path="/admin" element={<ProtectedRoute><AdminPasswordPage /></ProtectedRoute>} />
-    <Route path="/admin/dashboard" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
+    <Route path="/admin" element={<ProtectedRoute requireAdmin><AdminPasswordPage /></ProtectedRoute>} />
+    <Route path="/admin/login" element={<ProtectedRoute requireAdmin><AdminPasswordPage /></ProtectedRoute>} />
+    <Route path="/admin/dashboard" element={<ProtectedRoute requireAdmin requireAdminAuth><AdminLayout /></ProtectedRoute>}>
       <Route index element={<AdminDashboardPage />} />
       <Route path="users" element={<AdminUsersPage />} />
       <Route path="donors" element={<AdminDonorsPage />} />

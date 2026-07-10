@@ -48,42 +48,42 @@ const LandingPage = () => {
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
       <header className="sticky top-0 z-20 border-b border-white/10 bg-slate-950/80 backdrop-blur-xl">
-        <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-          <button onClick={() => navigate('/')} className="flex items-center gap-2 text-lg font-semibold tracking-wide text-white">
-            <span className="rounded-full bg-[linear-gradient(90deg,_#EF2D2D_0%,_#FF7A1A_100%)] p-2 text-white"><HeartPulse size={18} /></span>
-            Blood Donor Portal
+        <nav className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-4 sm:px-6 lg:px-8">
+          <button onClick={() => navigate('/')} className="flex min-w-0 items-center gap-2 text-sm font-semibold tracking-wide text-white sm:text-base">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(90deg,_#EF2D2D_0%,_#FF7A1A_100%)] text-white"><HeartPulse size={18} /></span>
+            <span className="truncate">Blood Donor Portal</span>
           </button>
-          <div className="hidden items-center gap-8 text-sm text-slate-300 md:flex">
+          <div className="hidden items-center gap-6 text-sm text-slate-300 md:flex">
             <a href="#home" className="transition hover:text-[#FF7A1A]">Home</a>
             <a href="#about" className="transition hover:text-[#FF7A1A]">About</a>
             <a href="#features" className="transition hover:text-[#FF7A1A]">Features</a>
             <a href="#contact" className="transition hover:text-[#FF7A1A]">Contact</a>
           </div>
-          <div className="flex items-center gap-3">
-            <button onClick={() => navigate('/login')} className="rounded-full border border-white/15 px-4 py-2 text-sm font-medium text-slate-200 transition hover:border-[#FF7A1A] hover:text-[#FF7A1A]">Login</button>
-            <button onClick={() => navigate('/register')} className="rounded-full bg-[linear-gradient(90deg,_#EF2D2D_0%,_#FF7A1A_100%)] px-4 py-2 text-sm font-semibold text-white shadow-[0_0_30px_rgba(255,122,26,0.35)] transition hover:brightness-110">Sign Up</button>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <button onClick={() => navigate('/login')} className="inline-flex h-10 min-w-[88px] items-center justify-center rounded-full border border-white/15 px-4 text-sm font-medium whitespace-nowrap text-slate-200 transition hover:border-[#FF7A1A] hover:text-[#FF7A1A]">Login</button>
+            <button onClick={() => navigate('/register')} className="inline-flex h-10 min-w-[96px] items-center justify-center rounded-full bg-[linear-gradient(90deg,_#EF2D2D_0%,_#FF7A1A_100%)] px-4 text-sm font-semibold whitespace-nowrap text-white shadow-[0_0_30px_rgba(255,122,26,0.35)] transition hover:brightness-110">Sign Up</button>
           </div>
         </nav>
       </header>
 
       <main id="home">
-        <section className="mx-auto grid max-w-7xl gap-10 px-4 py-20 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:px-8 lg:py-28">
+        <section className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-[1.1fr_0.9fr] lg:px-8 lg:py-28">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }} className="flex flex-col justify-center">
-            <div className="mb-5 inline-flex w-fit items-center gap-2 rounded-full border border-[#FF7A1A]/30 bg-[linear-gradient(90deg,_rgba(239,45,45,0.12)_0%,_rgba(255,122,26,0.12)_100%)] px-3 py-1 text-sm text-[#FF7A1A]">
+            <div className="mb-5 inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-[#FF7A1A]/30 bg-[linear-gradient(90deg,_rgba(239,45,45,0.12)_0%,_rgba(255,122,26,0.12)_100%)] px-3 py-1 text-sm text-[#FF7A1A]">
               <Sparkles size={14} />
               Trusted college network for urgent blood support
             </div>
-            <h1 className="text-4xl font-semibold leading-tight text-white sm:text-5xl lg:text-6xl">
+            <h1 className="text-3xl font-semibold leading-tight text-white sm:text-4xl lg:text-6xl">
               Donate Blood. Save Lives.
             </h1>
-            <p className="mt-6 max-w-2xl text-lg text-slate-300 sm:text-xl">
+            <p className="mt-6 max-w-2xl text-base text-slate-300 sm:text-lg lg:text-xl">
               Connecting blood donors with patients quickly and securely during emergencies.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <button onClick={() => navigate('/login')} className="inline-flex items-center justify-center gap-2 rounded-full bg-[linear-gradient(90deg,_#EF2D2D_0%,_#FF7A1A_100%)] px-6 py-3 font-semibold text-white shadow-[0_0_30px_rgba(255,122,26,0.35)] transition hover:brightness-110">
+              <button onClick={() => navigate('/login')} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[linear-gradient(90deg,_#EF2D2D_0%,_#FF7A1A_100%)] px-6 py-3 font-semibold text-white shadow-[0_0_30px_rgba(255,122,26,0.35)] transition hover:brightness-110">
                 Login <ArrowRight size={18} />
               </button>
-              <button onClick={() => navigate('/register')} className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-6 py-3 font-semibold text-slate-100 transition hover:border-[#FF7A1A] hover:bg-white/10">
+              <button onClick={() => navigate('/register')} className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/15 bg-white/5 px-6 py-3 font-semibold text-slate-100 transition hover:border-[#FF7A1A] hover:bg-white/10">
                 Create Account
               </button>
             </div>
@@ -91,12 +91,12 @@ const LandingPage = () => {
 
           <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }} className="relative mx-auto w-full max-w-xl">
             <div className="absolute inset-0 rounded-[2rem] bg-[linear-gradient(90deg,_rgba(239,45,45,0.2)_0%,_rgba(255,122,26,0.2)_100%)] blur-3xl" />
-            <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-slate-900/80 p-6 shadow-2xl shadow-black/30">
+            <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-slate-900/80 p-4 shadow-2xl shadow-black/30 sm:p-6">
               <div className="rounded-[1.5rem] border border-white/10 bg-gradient-to-br from-slate-800 to-slate-900 p-6">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div>
                     <p className="text-sm font-medium text-[#FF7A1A]">Emergency Support</p>
-                    <p className="text-3xl font-semibold text-white">24/7 Ready</p>
+                    <p className="text-2xl font-semibold text-white sm:text-3xl">24/7 Ready</p>
                   </div>
                   <div className="rounded-full bg-[linear-gradient(90deg,_#EF2D2D_0%,_#FF7A1A_100%)] p-3 text-white">
                     <Droplets size={24} />
@@ -142,7 +142,7 @@ const LandingPage = () => {
         </section>
 
         <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <div className="grid gap-4 rounded-[2rem] border border-white/10 bg-gradient-to-br from-slate-900 to-slate-800 p-8 md:grid-cols-2 xl:grid-cols-4">
+          <div className="grid gap-4 rounded-[2rem] border border-white/10 bg-gradient-to-br from-slate-900 to-slate-800 p-4 sm:p-6 md:grid-cols-2 xl:grid-cols-4">
             {[
               { label: 'Total Users', value: loadingStats ? '—' : stats.totalUsers },
               { label: 'Total Donors', value: loadingStats ? '—' : stats.totalDonors },
@@ -162,7 +162,7 @@ const LandingPage = () => {
             <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#FF7A1A]">How It Works</p>
             <h2 className="mt-3 text-3xl font-semibold text-white sm:text-4xl">A simple path to saving lives</h2>
           </div>
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-5">
+          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-5">
             {steps.map((step, index) => (
               <div key={step} className="rounded-3xl border border-white/10 bg-slate-900/70 p-6 text-center shadow-lg shadow-black/20">
                 <div className="mx-auto mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-[linear-gradient(90deg,_#EF2D2D_0%,_#FF7A1A_100%)] text-sm font-semibold text-white">
@@ -175,7 +175,7 @@ const LandingPage = () => {
         </section>
 
         <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <div className="rounded-[2rem] border border-white/10 bg-slate-900/70 p-8 shadow-xl shadow-black/20">
+          <div className="rounded-[2rem] border border-white/10 bg-slate-900/70 p-4 shadow-xl shadow-black/20 sm:p-8">
             <div className="mb-8 text-center">
               <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#FF7A1A]">Available Blood Groups</p>
               <h2 className="mt-3 text-3xl font-semibold text-white sm:text-4xl">Matching donors can be found fast</h2>
@@ -191,7 +191,7 @@ const LandingPage = () => {
         </section>
 
         <section id="about" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <div className="grid gap-8 rounded-[2rem] border border-white/10 bg-slate-900/70 p-8 lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="grid gap-8 rounded-[2rem] border border-white/10 bg-slate-900/70 p-4 sm:p-8 lg:grid-cols-[0.9fr_1.1fr]">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#FF7A1A]">About</p>
               <h2 className="mt-3 text-3xl font-semibold text-white sm:text-4xl">Built for urgent campus support</h2>

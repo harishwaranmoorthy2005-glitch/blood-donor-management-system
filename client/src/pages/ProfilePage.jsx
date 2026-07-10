@@ -82,7 +82,7 @@ export default function ProfilePage() {
         </div>
       </motion.div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-6 xl:grid-cols-2">
 
         {/* Personal Information */}
 

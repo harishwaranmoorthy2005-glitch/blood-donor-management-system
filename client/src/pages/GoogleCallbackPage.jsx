@@ -7,7 +7,7 @@ import { useAuth } from "../context/AuthContext";
 export default function GoogleCallbackPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { setAuthSession } = useAuth();
+  const { setAuthSession, clearAdminAuthSession } = useAuth();
 
   useEffect(() => {
     const login = async () => {
@@ -20,11 +20,10 @@ export default function GoogleCallbackPage() {
         return;
       }
 
+      clearAdminAuthSession();
       setAuthSession(token, null, isNewUser === "true");
 
       console.debug('[auth-debug] google callback received', { hasToken: Boolean(token), isNewUser });
-
-      setAuthSession(token, null, isNewUser === "true");
 
       try {
         const res = await api.get("/api/auth/me");
@@ -36,9 +35,8 @@ export default function GoogleCallbackPage() {
 
         console.debug('[auth-debug] google callback user resolved', { email: user.email, role: user.role });
         setAuthSession(token, user, isNewUser === "true");
-        const redirectPath = user.role === "admin" ? "/admin/dashboard" : "/dashboard";
-        console.debug('[auth-debug] google callback redirecting to', { redirectPath });
-        window.location.replace(redirectPath);
+        console.debug('[auth-debug] google callback redirecting to', { redirectPath: '/dashboard' });
+        navigate('/dashboard', { replace: true });
       } catch (err) {
         console.error(err);
         localStorage.removeItem("token");

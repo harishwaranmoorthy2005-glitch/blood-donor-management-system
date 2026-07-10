@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, Users, HeartHandshake, ClipboardList, AlertTriangle, UserCircle, Bell, LogOut } from 'lucide-react';
 import adminApi, { ADMIN_TOKEN_KEY } from '../../api/adminAxios.js';
+import { useAuth } from '../../context/AuthContext.jsx';
 
 const navItems = [
   { to: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -15,6 +16,7 @@ const navItems = [
 
 export default function AdminLayout() {
   const navigate = useNavigate();
+  const { clearAdminAuthSession } = useAuth();
   const [profile, setProfile] = useState({ name: 'Admin', email: '' });
 
   useEffect(() => {
@@ -40,6 +42,7 @@ export default function AdminLayout() {
   }, []);
 
   const handleLogout = () => {
+    clearAdminAuthSession();
     localStorage.removeItem(ADMIN_TOKEN_KEY);
     localStorage.removeItem('adminSessionVerified');
     localStorage.removeItem('adminProfile');

@@ -16,12 +16,12 @@ export default function Layout() {
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
       <div className="mx-auto flex max-w-7xl flex-col lg:flex-row">
-        <aside className="w-full border-b border-slate-800 bg-slate-900/80 p-4 backdrop-blur lg:w-72 lg:border-b-0 lg:border-r lg:min-h-screen">
+        <aside className="w-full border-b border-slate-800 bg-slate-900/80 p-3 backdrop-blur sm:p-4 lg:w-72 lg:border-b-0 lg:border-r lg:min-h-screen">
           <div className="mb-8 rounded-2xl border border-red-500/20 bg-red-500/10 p-4">
             <p className="text-sm font-semibold text-red-300">College Blood Donor Portal</p>
             <p className="text-xs text-slate-400">Secure donor coordination</p>
           </div>
-          <nav className="space-y-2">
+          <nav className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
             {navItems.map(({ to, label, icon: Icon }) => (
               <NavLink key={to} to={to} className={({ isActive }) => `flex items-center gap-3 rounded-xl px-4 py-3 transition ${isActive ? 'bg-red-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white'}`}>
                 <Icon size={18} />
@@ -49,7 +49,7 @@ export default function Layout() {
             </button>
           </div>
         </aside>
-        <main className="flex-1 p-4 lg:p-8">
+        <main className="flex-1 p-3 sm:p-4 lg:p-8">
           <header className="mb-6 flex flex-col gap-3 rounded-2xl border border-slate-800 bg-slate-900/80 p-4 shadow-xl md:flex-row md:items-center md:justify-between">
             <div>
               <p className="text-sm text-red-300">College Blood Donor Portal</p>
