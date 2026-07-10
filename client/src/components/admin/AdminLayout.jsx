@@ -48,7 +48,7 @@ export default function AdminLayout() {
     localStorage.removeItem('adminProfile');
     sessionStorage.removeItem(ADMIN_TOKEN_KEY);
     sessionStorage.removeItem('adminSessionVerified');
-    navigate('/');
+    navigate('/dashboard');
   };
 
   return (

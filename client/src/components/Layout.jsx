@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, Search, AlertTriangle, Bell, UserCircle, LogOut, Shield } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -11,7 +11,13 @@ const navItems = [
 ];
 
 export default function Layout() {
+  const navigate = useNavigate();
   const { user, logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
@@ -52,7 +58,7 @@ export default function Layout() {
                 <p className="truncate text-xs text-slate-400">{user?.email}</p>
               </div>
             </div>
-            <button onClick={logout} className="mt-4 flex items-center gap-2 rounded-xl bg-slate-700 px-3 py-2 text-sm text-slate-200 transition hover:bg-slate-600">
+            <button onClick={handleLogout} className="mt-4 flex items-center gap-2 rounded-xl bg-slate-700 px-3 py-2 text-sm text-slate-200 transition hover:bg-slate-600">
               <LogOut size={16} />
               Logout
             </button>
