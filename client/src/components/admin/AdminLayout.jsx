@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, Users, HeartHandshake, AlertTriangle, UserCircle, Bell, LogOut, Menu, X } from 'lucide-react';
 import adminApi, { ADMIN_TOKEN_KEY } from '../../api/adminAxios.js';
 import { useAuth } from '../../context/AuthContext.jsx';
@@ -15,6 +15,7 @@ const navItems = [
 
 export default function AdminLayout() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { clearAdminAuthSession } = useAuth();
   const [profile, setProfile] = useState({ name: 'Admin', email: '' });
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
@@ -101,12 +102,16 @@ export default function AdminLayout() {
             </button>
           </div>
           <nav className="mt-6 space-y-2">
-            {navItems.map(({ to, label, icon: Icon }) => (
-              <NavLink key={to} to={to} onClick={closeMobileNav} className={({ isActive }) => `flex items-center gap-3 rounded-xl px-4 py-3 transition ${isActive ? 'bg-red-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white'}`}>
-                <Icon size={18} />
-                {label}
-              </NavLink>
-            ))}
+            {navItems.map(({ to, label, icon: Icon }) => {
+              const isActive = location.pathname === to;
+
+              return (
+                <NavLink key={to} to={to} onClick={closeMobileNav} className={`flex items-center gap-3 rounded-xl px-4 py-3 transition ${isActive ? 'bg-red-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white'}`}>
+                  <Icon size={18} />
+                  {label}
+                </NavLink>
+              );
+            })}
           </nav>
           <div className="mt-8 rounded-2xl border border-slate-800 bg-slate-800/80 p-4">
             <div className="flex items-center gap-3">

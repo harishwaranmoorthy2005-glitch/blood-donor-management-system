@@ -1,14 +1,13 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Users, HeartHandshake, ClipboardList, AlertTriangle, ShieldCheck } from 'lucide-react';
+import { Users, HeartHandshake, ClipboardList, ShieldCheck } from 'lucide-react';
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import adminApi from '../../api/adminAxios.js';
 
 const statCards = [
   { key: 'totalUsers', label: 'Total Users', icon: Users, accent: 'from-red-500 to-orange-400' },
   { key: 'totalDonors', label: 'Total Donors', icon: HeartHandshake, accent: 'from-sky-500 to-indigo-500' },
-  { key: 'totalBloodRequests', label: 'Total Blood Requests', icon: ClipboardList, accent: 'from-emerald-500 to-lime-500' },
-  { key: 'totalEmergencyRequests', label: 'Total Emergency Requests', icon: AlertTriangle, accent: 'from-fuchsia-500 to-violet-500' }
+  { key: 'totalBloodRequests', label: 'Total Blood Requests', icon: ClipboardList, accent: 'from-emerald-500 to-lime-500' }
 ];
 
 export default function AdminDashboardPage() {
@@ -39,15 +38,18 @@ export default function AdminDashboardPage() {
     return <div className="rounded-3xl border border-slate-800 bg-slate-900/80 p-8 text-slate-300">Loading admin dashboard...</div>;
   }
 
+  const bloodRequestTotal = dashboard?.emergencyByStatus?.reduce((sum, item) => sum + (item.count || 0), 0) ?? dashboard?.emergencyRequests ?? 0;
+
   return (
     <div className="w-full min-w-0 space-y-4 overflow-x-hidden sm:space-y-6">
       <div className="overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/80 p-4 shadow-2xl sm:p-6">
         <p className="text-sm text-red-300">Administrative control center</p>
         <h1 className="text-2xl font-semibold">Admin dashboard</h1>
       </div>
-      <div className="grid gap-3 sm:gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-3 sm:gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {statCards.map((item, index) => {
           const Icon = item.icon;
+          const value = item.key === 'totalBloodRequests' ? bloodRequestTotal : (dashboard?.[item.key] ?? 0);
           return (
             <motion.div
               key={item.key}
@@ -60,7 +62,7 @@ export default function AdminDashboardPage() {
                 <Icon className="text-white" size={20} />
               </div>
               <p className="text-sm text-slate-400">{item.label}</p>
-              <p className="mt-2 text-2xl font-semibold text-white sm:text-3xl">{dashboard?.[item.key] ?? 0}</p>
+              <p className="mt-2 text-2xl font-semibold text-white sm:text-3xl">{value}</p>
             </motion.div>
           );
         })}
